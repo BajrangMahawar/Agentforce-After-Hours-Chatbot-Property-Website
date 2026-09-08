@@ -77,4 +77,3 @@ Transform your ideas into custom Lightning apps that extend CRM workflows direct
 - [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
 - [Salesforce CLI Plugin Development Guide](https://developer.salesforce.com/docs/platform/salesforce-cli-plugin/guide/conceptual-overview.html)
 - [Salesforce VS Code Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-
