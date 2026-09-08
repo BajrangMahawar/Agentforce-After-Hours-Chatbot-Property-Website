@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Agentforce Site Visit Scheduling</label>
+    <description>Access to the ServiceAppointment side of the model (FR-6 site-visit booking). Kept separate from Agentforce Property Data because it only deploys in orgs where Salesforce Scheduler / Field Service is enabled.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <objectPermissions>
+        <object>ServiceAppointment</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- The chatbot files each visitor as a Lead; ServiceAppointment needs it as the parent record. -->
+        <object>Lead</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- ServiceAppointmentTrigger files a follow-up Task for the mediator on every booking. -->
+        <object>Task</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- resolveProperty queries Property__c WITH USER_MODE before the insert,
+             so the booking throws here when only this permission set is assigned. -->
+        <object>Property__c</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- Mediators are Contacts; resolveMediator and findExistingContact read them. -->
+        <object>Contact</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <fieldPermissions><field>Lead.Enquiry_Notes__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Lead.Property_of_Interest__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>ServiceAppointment.Property__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>ServiceAppointment.Mediator__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <!-- The site-visit insert runs in USER_MODE and writes Lead__c, so the
+         booking fails outright without edit access to it. Task needs no field
+         permissions here: it takes no custom lookups, and the trigger links it
+         through the standard WhoId/WhatId. -->
+    <fieldPermissions><field>ServiceAppointment.Lead__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <!-- Both controllers call AgentforceController.blankToNull and
+         AgentforceDataService.parseBusinessTime on their first line of work,
+         so without access to the helpers the actions fail before any DML. -->
+    <classAccesses><apexClass>AgentforceController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforceDataService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforceMediatorController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforceSiteVisitController</apexClass><enabled>true</enabled></classAccesses>
+</PermissionSet>

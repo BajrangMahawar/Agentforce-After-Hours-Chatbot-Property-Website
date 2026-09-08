@@ -1,0 +1,129 @@
+<template>
+    <div class="portal">
+        <!-- Hero -->
+        <header class="hero">
+            <p class="hero__watermark" aria-hidden="true">{heroWatermark}</p>
+            <div class="hero__inner">
+                <p class="hero__eyebrow">{brandName}</p>
+                <h1 class="hero__title">{heroHeading} <span class="hero__accent">{heroHighlight}</span></h1>
+                <p class="hero__lede">{heroSubheading}</p>
+                <div class="hero__stats">
+                    <div class="stat">
+                        <span class="stat__value">{stats.projects}</span>
+                        <span class="stat__label">Curated Projects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat__value">{stats.cities}</span>
+                        <span class="stat__label">Cities</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat__value">{stats.readyToMove}</span>
+                        <span class="stat__label">Ready to Move</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters -->
+        <section class="filters" aria-label="Search filters">
+            <div class="filters__grid">
+                <div class="field">
+                    <label class="field__label" for="city">City</label>
+                    <select id="city" class="field__control" value={city} onchange={handleCity}>
+                        <template for:each={cityOptions} for:item="opt">
+                            <option key={opt} value={opt}>{opt}</option>
+                        </template>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="config">Configuration</label>
+                    <select id="config" class="field__control" value={configuration} onchange={handleConfiguration}>
+                        <template for:each={configurationOptions} for:item="opt">
+                            <option key={opt} value={opt}>{opt}</option>
+                        </template>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="budget">Budget</label>
+                    <select id="budget" class="field__control" value={budget} onchange={handleBudget}>
+                        <template for:each={budgetOptions} for:item="opt">
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        </template>
+                    </select>
+                </div>
+                <div class="field field--action">
+                    <button class="btn btn--ghost" onclick={handleReset}>Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="results">
+            <div class="results__head">
+                <h2 class="results__title">{resultsHeading}</h2>
+                <p class="results__count">{resultsCaption}</p>
+            </div>
+
+            <template lwc:if={loading}>
+                <div class="skeleton-grid">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+            </template>
+
+            <template lwc:elseif={hasError}>
+                <div class="empty">
+                    <p class="empty__title">We could not load the portfolio</p>
+                    <p class="empty__text">{errorMessage}</p>
+                </div>
+            </template>
+
+            <template lwc:elseif={hasResults}>
+                <div class="grid">
+                    <template for:each={properties} for:item="p">
+                        <article key={p.recordId} class="card">
+                            <div class="card__frame">
+                                <span class="card__monogram">{p.initials}</span>
+                                <span class="card__status">{p.status}</span>
+                            </div>
+                            <div class="card__body">
+                                <p class="card__city">{p.city}</p>
+                                <h3 class="card__name">{p.name}</h3>
+                                <p class="card__config">{p.configurations}</p>
+                                <div class="card__rule"></div>
+                                <div class="card__meta">
+                                    <div>
+                                        <span class="card__label">Price</span>
+                                        <span class="card__price">{p.priceRange}</span>
+                                    </div>
+                                    <div>
+                                        <span class="card__label">Possession</span>
+                                        <span class="card__value">{p.possession}</span>
+                                    </div>
+                                </div>
+                                <p class="card__address">{p.address}</p>
+                                <p class="card__rera">RERA {p.reraNumber}</p>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:else>
+                <div class="empty">
+                    <p class="empty__title">Nothing matches that combination</p>
+                    <p class="empty__text">
+                        Try a wider budget or a different configuration - our advisors can also source
+                        off-market inventory on request.
+                    </p>
+                </div>
+            </template>
+        </section>
+
+        <footer class="foot">
+            <p class="foot__brand">{brandName}</p>
+            <p class="foot__note">{footerNote}</p>
+        </footer>
+    </div>
+</template>

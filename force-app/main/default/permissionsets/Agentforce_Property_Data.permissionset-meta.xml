@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Agentforce Property Data</label>
+    <description>Read/write access to the property portfolio data model. Assign to the Agentforce agent user so the after-hours bot can query properties and specifications, and to sales users who maintain the portfolio.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <objectPermissions>
+        <object>Property__c</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Property_Specification__c</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- Mediators are Contacts; read access is required for the Mediator-Property junction. -->
+        <object>Contact</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <!-- Junction is ControlledByParent (Contact), so record visibility follows Contact
+             sharing; View All here would require View All Contact. -->
+        <object>Mediator_Property__c</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <fieldPermissions><field>Mediator_Property__c.Mediator_Name__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Mediator_Property__c.Mediator_Phone__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Mediator_Property__c.Property_Name__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Mediator_Property__c.Property_City__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Mediator_Property__c.Property_Price_Range__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Address__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.City__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Configurations__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Description__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Location__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Possession_Date__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Price_Max__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Price_Min__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Price_Range__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Property_Type__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.RERA_Number__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property__c.Status__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property_Specification__c.Amenities__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property_Specification__c.Built_up_Area__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property_Specification__c.Carpet_Area__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Property_Specification__c.Floor_Plan_URL__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>ContentVersion.Document_Type__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>ContentVersion.Shareable_With_Visitors__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>Lead.Enquiry_Notes__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Lead.Property_of_Interest__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <classAccesses><apexClass>AgentforceController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforceDataService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforceMediatorController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>AgentforcePropertyDetailController</apexClass><enabled>true</enabled></classAccesses>
+    <!-- Brochures reach the visitor by email, so the agent needs this class too. -->
+    <classAccesses><apexClass>AgentforceDocumentEmailController</apexClass><enabled>true</enabled></classAccesses>
+    <!-- The booking action resolves the property and mediator through this
+         permission set, so it needs the site-visit class too. -->
+    <classAccesses><apexClass>AgentforceSiteVisitController</apexClass><enabled>true</enabled></classAccesses>
+    <tabSettings><tab>Property__c</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Property_Specification__c</tab><visibility>Visible</visibility></tabSettings>
+</PermissionSet>

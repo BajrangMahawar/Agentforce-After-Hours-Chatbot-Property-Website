@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Property_of_Interest__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The project the visitor was asking about when they shared their contact details. Set by the chatbot on first capture (FR-5) and used to route the lead to the right sales rep.</description>
+    <externalId>false</externalId>
+    <label>Property of Interest</label>
+    <referenceTo>Property__c</referenceTo>
+    <relationshipLabel>Leads</relationshipLabel>
+    <relationshipName>Leads</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

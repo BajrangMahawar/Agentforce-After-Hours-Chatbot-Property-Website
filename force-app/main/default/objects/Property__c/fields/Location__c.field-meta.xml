@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location__c</fullName>
+    <description>Geolocation (Latitude/Longitude) of the project. Exposed as Location__Latitude__s and Location__Longitude__s so the agent can run DISTANCE()/GEOLOCATION() "properties near me" queries.</description>
+    <displayLocationInDecimal>true</displayLocationInDecimal>
+    <externalId>false</externalId>
+    <label>Location</label>
+    <required>false</required>
+    <scale>6</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Location</type>
+</CustomField>

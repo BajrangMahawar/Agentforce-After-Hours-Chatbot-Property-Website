@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Property__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The project this site visit is for. Scheduled Start/End, Service Resource (sales rep), Service Territory and Status are standard Scheduler fields - this lookup is the only custom piece needed to tie a booking back to the portfolio (FR-6).</description>
+    <externalId>false</externalId>
+    <label>Property</label>
+    <referenceTo>Property__c</referenceTo>
+    <relationshipLabel>Site Visits</relationshipLabel>
+    <relationshipName>Site_Visits</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

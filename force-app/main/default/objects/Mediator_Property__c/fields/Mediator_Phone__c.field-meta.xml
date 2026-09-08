@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mediator_Phone__c</fullName>
+    <description>Best contact number for the mediator, mobile first. Lets the Property related list be actioned without opening the Contact.</description>
+    <externalId>false</externalId>
+    <formula>BLANKVALUE(Mediator__r.MobilePhone, Mediator__r.Phone)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>Mediator Phone</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmbeddedServiceConfig xmlns="http://soap.sforce.com/2006/04/metadata">
+    <areGuestUsersAllowed>true</areGuestUsersAllowed>
+    <branding>EmbeddedServiceConfig_BrandingSet_1a06b69d3e8</branding>
+    <deploymentFeature>EmbeddedMessaging</deploymentFeature>
+    <deploymentType>Web</deploymentType>
+    <embeddedServiceMessagingChannel>
+        <isChatInvitationCustomizable>false</isChatInvitationCustomizable>
+        <isEnabled>true</isEnabled>
+        <isInvitationEnabled>false</isInvitationEnabled>
+        <isSendInvtAllowedAfterAccept>false</isSendInvtAllowedAfterAccept>
+        <isSendInvtAllowedAfterReject>false</isSendInvtAllowedAfterReject>
+        <messagingChannel>Property_Portal_Channel</messagingChannel>
+        <shouldShowAgentforceTagline>false</shouldShowAgentforceTagline>
+        <shouldShowDeliveryReceipts>true</shouldShowDeliveryReceipts>
+        <shouldShowEmojiSelection>false</shouldShowEmojiSelection>
+        <shouldShowReadReceipts>false</shouldShowReadReceipts>
+        <shouldShowTypingIndicators>true</shouldShowTypingIndicators>
+        <shouldStartNewLineOnEnter>false</shouldStartNewLineOnEnter>
+    </embeddedServiceMessagingChannel>
+    <isEnabled>true</isEnabled>
+    <isTermsAndConditionsEnabled>false</isTermsAndConditionsEnabled>
+    <isTermsAndConditionsRequired>false</isTermsAndConditionsRequired>
+    <masterLabel>Property_Portal_Channel</masterLabel>
+    <shouldHideAuthDialog>false</shouldHideAuthDialog>
+    <site>ESW_Property_Portal_Channe_17885084821371</site>
+</EmbeddedServiceConfig>

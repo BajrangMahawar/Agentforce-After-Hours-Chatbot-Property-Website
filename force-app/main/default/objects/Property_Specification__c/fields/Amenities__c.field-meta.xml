@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amenities__c</fullName>
+    <description>Amenities available to this unit type. Restricted multi-select so the agent can answer "does it have a gym / covered parking?" with an INCLUDES() filter instead of a text search.</description>
+    <externalId>false</externalId>
+    <label>Amenities</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <visibleLines>8</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>true</sorted>
+            <value><fullName>Swimming Pool</fullName><default>false</default><label>Swimming Pool</label></value>
+            <value><fullName>Gymnasium</fullName><default>false</default><label>Gymnasium</label></value>
+            <value><fullName>Clubhouse</fullName><default>false</default><label>Clubhouse</label></value>
+            <value><fullName>Kids Play Area</fullName><default>false</default><label>Kids Play Area</label></value>
+            <value><fullName>Landscaped Garden</fullName><default>false</default><label>Landscaped Garden</label></value>
+            <value><fullName>Jogging Track</fullName><default>false</default><label>Jogging Track</label></value>
+            <value><fullName>Indoor Games Room</fullName><default>false</default><label>Indoor Games Room</label></value>
+            <value><fullName>Multipurpose Hall</fullName><default>false</default><label>Multipurpose Hall</label></value>
+            <value><fullName>Yoga / Meditation Deck</fullName><default>false</default><label>Yoga / Meditation Deck</label></value>
+            <value><fullName>Sports Court</fullName><default>false</default><label>Sports Court</label></value>
+            <value><fullName>Covered Parking</fullName><default>false</default><label>Covered Parking</label></value>
+            <value><fullName>Visitor Parking</fullName><default>false</default><label>Visitor Parking</label></value>
+            <value><fullName>EV Charging</fullName><default>false</default><label>EV Charging</label></value>
+            <value><fullName>Power Backup</fullName><default>false</default><label>Power Backup</label></value>
+            <value><fullName>Rainwater Harvesting</fullName><default>false</default><label>Rainwater Harvesting</label></value>
+            <value><fullName>Sewage Treatment Plant</fullName><default>false</default><label>Sewage Treatment Plant</label></value>
+            <value><fullName>24x7 Security</fullName><default>false</default><label>24x7 Security</label></value>
+            <value><fullName>CCTV Surveillance</fullName><default>false</default><label>CCTV Surveillance</label></value>
+            <value><fullName>Intercom</fullName><default>false</default><label>Intercom</label></value>
+            <value><fullName>Elevator</fullName><default>false</default><label>Elevator</label></value>
+            <value><fullName>Fire Safety System</fullName><default>false</default><label>Fire Safety System</label></value>
+            <value><fullName>Senior Citizen Area</fullName><default>false</default><label>Senior Citizen Area</label></value>
+            <value><fullName>Pet Park</fullName><default>false</default><label>Pet Park</label></value>
+            <value><fullName>Co-working Space</fullName><default>false</default><label>Co-working Space</label></value>
+            <value><fullName>Convenience Store</fullName><default>false</default><label>Convenience Store</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

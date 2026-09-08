@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Junction between a mediator (Contact) and a Property. One mediator markets many projects and one project is marketed by many mediators, so the pairing cannot live as a lookup on either side. The chatbot uses it to answer "who do I talk to for this project?" and to route an after-hours enquiry to the right mediator.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <label>Mediator-Property</label>
+    <nameField>
+        <displayFormat>MP-{00000}</displayFormat>
+        <label>Mediator-Property Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Mediator-Properties</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

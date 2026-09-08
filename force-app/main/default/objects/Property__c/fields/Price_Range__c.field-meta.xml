@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Price_Range__c</fullName>
+    <description>Human-readable price range derived from Price (Min) and Price (Max). This is the string the chatbot quotes, so pricing is never hand-typed into two places.</description>
+    <externalId>false</externalId>
+    <formula>IF(AND(ISBLANK(Price_Min__c), ISBLANK(Price_Max__c)),
+  "Price on request",
+  IF(BLANKVALUE(Price_Max__c, Price_Min__c) &gt;= 10000000,
+    "INR " &amp; TEXT(ROUND(BLANKVALUE(Price_Min__c, Price_Max__c) / 10000000, 2)) &amp;
+      IF(OR(ISBLANK(Price_Max__c), Price_Max__c = Price_Min__c),
+        " Cr",
+        " Cr - " &amp; TEXT(ROUND(Price_Max__c / 10000000, 2)) &amp; " Cr"),
+    "INR " &amp; TEXT(ROUND(BLANKVALUE(Price_Min__c, Price_Max__c) / 100000, 2)) &amp;
+      IF(OR(ISBLANK(Price_Max__c), Price_Max__c = Price_Min__c),
+        " Lakh",
+        " Lakh - " &amp; TEXT(ROUND(Price_Max__c / 100000, 2)) &amp; " Lakh")))</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>Price Range</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

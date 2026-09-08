@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Document_Type__c</fullName>
+    <description>Classifies a file linked to a Property via ContentDocumentLink so the agent can pick the right document to share in chat (FR-3) or attach to an email (FR-4) - "send me the brochure" resolves to Document Type = Brochure.</description>
+    <externalId>false</externalId>
+    <label>Document Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Brochure</fullName><default>false</default><label>Brochure</label></value>
+            <value><fullName>Specification Sheet</fullName><default>false</default><label>Specification Sheet</label></value>
+            <value><fullName>Price List</fullName><default>false</default><label>Price List</label></value>
+            <value><fullName>Floor Plan</fullName><default>false</default><label>Floor Plan</label></value>
+            <value><fullName>Site Layout</fullName><default>false</default><label>Site Layout</label></value>
+            <value><fullName>RERA Certificate</fullName><default>false</default><label>RERA Certificate</label></value>
+            <value><fullName>Image / Gallery</fullName><default>false</default><label>Image / Gallery</label></value>
+            <value><fullName>Other</fullName><default>false</default><label>Other</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

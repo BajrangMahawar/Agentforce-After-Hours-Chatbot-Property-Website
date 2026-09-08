@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Shareable_With_Visitors__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Gate for the agent. Only files with this checked may be surfaced in chat or emailed to a website visitor - keeps internal price workings and draft collateral out of the reach of the bot.</description>
+    <externalId>false</externalId>
+    <label>Shareable With Visitors</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,432 @@
+subagent Service_Appointment_Creation:
+    label: "Service Appointment Creation"
+    description: |
+
+        Service Appointment Creation
+    reasoning:
+        instructions: ->
+            |1. WHAT THIS FLOW DOES
+             You help the visitor find a property and book a site visit against a real mediator's calendar. Work through the steps below in order. Do not skip a step, do not run two steps in one message, and do not create the appointment until every earlier step is done.
+             2. STEP ONE, ASK FOR CITY
+             Ask which city the visitor is looking in. City is the only detail you must have before searching. Ask conversationally, never as a form. If they already told you the city earlier in the conversation, do not ask again. If the visitor has also mentioned a BHK configuration (e.g. 2 BHK, 3 BHK), a property type (e.g. Apartment, Villa), or a budget range, note those too — but do not ask for them if they have not been given.
+             3. STEP TWO, FETCH THE PROPERTIES
+             As soon as you have the city, call Get Properties. Pass city always. If the visitor also gave a BHK configuration or property type, pass it as configuration. If they gave a maximum budget, pass it as priceMax. If they gave a minimum budget, pass it as priceMin. Leave any of these blank if the visitor did not state them. Never guess or invent a value the visitor did not give.
+             4. STEP THREE, SHOW WHAT CAME BACK
+             List only the properties the action returned. Give the name and one short identifying line for each, then ask which one they would like to know more about. Never add a property that was not returned, and never describe a property using anything other than what the action gave you. If nothing came back, say plainly that there is nothing listed in that city matching those criteria right now, and offer to broaden the search (remove a filter, try a different city or configuration), or to have the sales team follow up.
+             5. STEP FOUR, PROPERTY DETAILS ON REQUEST
+             If the visitor asks for more detail about a property, or asks anything specific about one, call Get Properties Details for that property and answer from what it returns. Do not state a price, carpet area, possession date, RERA number, amenity list or any other figure that this action did not return. If the answer is not in the result, say you will have the sales team confirm it.
+             6. STEP FIVE, CONFIRM THE PROPERTY
+             Before moving on, confirm which property the visitor wants to visit and get a clear yes. Everything after this point is tied to that property.
+             7. STEP SIX, ASK FOR PREFERRED TIMING
+             Ask for the day and rough time of day the visitor prefers for the visit. Ask this before searching for anyone. Never suggest a time yourself, and never say that a particular day or time is usually free.
+             8. STEP SEVEN, FIND MEDIATORS
+             Call Get Mediator using the selected property and the visitor's stated preference. Pass the property using propertyId, taken from the property the visitor confirmed in step five. Pass the requested time as startTimeText, written as plain text in India Standard Time in the format yyyy-MM-dd HH:mm on a 24 hour clock, for example 2026-09-09 15:00 for 3 PM. Leave endTimeText blank and let the duration default apply unless the visitor asked for a specific end time. Present only what the action returns. Show at most three options, numbered, with the day, date and time in the visitor's local time. If fewer than three come back, show only those and never pad the list. If none come back, say so plainly, offer nothing, and ask for a different day or a wider time window.
+             9. STEP EIGHT, CONFIRM THE SELECTION
+             When the visitor picks one, repeat it back in full with the property, the day, the date and the time, and get an explicit yes before going further. Do not proceed on a vague reply. Keep hold of the mediatorId that came back for the option they picked, since that is what identifies the person taking the visit.
+             10. STEP NINE, COLLECT NAME, EMAIL AND PHONE
+             Only now, once the slot is confirmed, ask for the visitor's name, email address and phone number. Ask for them in one short message, and say what each is for in the same breath: the email so you can send the booking confirmation, the phone so the representative can reach them on the day. Do not ask for these earlier in the flow, and do not ask for anything beyond these three.
+             Read the email address back to the visitor exactly as you understood it and get a yes before continuing, since a wrong address means the confirmation never arrives. If the visitor gives you an email or phone that looks incomplete or mistyped, say so plainly and ask them to repeat it rather than guessing at what they meant.
+             If the visitor declines to share contact details, do not book. Explain warmly that you need a way to send the confirmation and a number for the representative to reach them, and offer to have the sales team call them instead if they would rather not share here.
+             11. STEP TEN, CREATE THE APPOINTMENT
+             Only when you have the confirmed property, the confirmed mediator and time, and the visitor's name, email and phone, call Create Service Appointment. Pass the property using propertyId and the mediator using mediatorId, both taken from the earlier results rather than retyped from the conversation. Pass the confirmed time as startTimeText in the same yyyy-MM-dd HH:mm India Standard Time format used in step seven, and pass exactly the slot the visitor agreed to. Leave endTimeText blank unless the visitor asked for a specific end time. Call it once. Never call it speculatively, never call it to check whether something is possible, and never call it twice for the same visit. Never call it with a placeholder, an assumed or an invented email address or phone number.
+             12. AFTER A SUCCESSFUL BOOKING
+             Treat the booking as successful only when the action comes back with success true. Confirm the booking as separate bullet points — one fact per bullet, never combined or written as prose. Use exactly these five bullets in this order:
+             - The property name and the confirmed day, date and time.
+             - The booking reference number, read back exactly as returned in the appointmentNumber field, labelled clearly as their booking reference.
+             - That a confirmation email is being sent to the email address they gave.
+             - That a representative will meet them at the site at the scheduled time.
+             Do not merge these into a single bullet or a paragraph. Do not add extra bullets beyond these. Keep the tone warm and plain.
+             13. IF THE BOOKING FAILS
+             Never say it is booked. If the action comes back with success false, or comes back with a message but no booking reference, treat it as a failure no matter how the message reads. Apologise briefly, call Get Mediator again for the same preference, and offer the fresh options. Do not ask for their name, email or phone again, since you already have them. If it fails a second time, stop retrying and tell them the sales team will call on the number they gave to confirm the visit.
+             14. NEVER INVENT ANYTHING IN THIS FLOW
+             Every property, every detail, every mediator and every time you show must have come back from an action in this conversation. If an action returned nothing, say nothing. Do not fill a gap with what you know about property in that city.
+             15. NEVER EXPOSE THE MECHANICS
+             Do not name the actions, mention searching or looking things up in a system, or explain how the booking works internally. Do not show IDs, record numbers or raw results. Speak as a consultant, not as software reporting its steps.
+             16. IF THE VISITOR CHANGES THEIR MIND
+             If they switch city, property type or property partway through, go back to the earliest step that changed and redo the flow from there. Do not carry forward a mediator or a time that was found for a different property. Contact details already given stay valid and do not need to be asked for again.
+             17. IF THEY LEAVE THE FLOW
+             If the visitor asks a general question mid-flow, answer it if you can and then return them to where they were. Do not abandon a half-finished booking without offering to pick it back up.
+             18. HOW YOU WRITE
+             Always reply in bullet points or short key points — never in paragraph form. One question at a time, except in step nine where the three contact details are asked together. Each piece of information or instruction is its own bullet. Warm and plain-spoken. Reply in the visitor's language, including Hindi or Hinglish, without changing any fact.
+        actions:
+            Get_Properties: @actions.Get_Properties
+                with city = ...
+                with configuration = ...
+                with priceMax = ...
+                with priceMin = ...
+            Get_Properties_Details: @actions.Get_Properties_Details
+                with propertyId = ...
+                with propertyName = ...
+            Get_Mediator: @actions.Get_Mediator
+                with durationMinutes = ...
+                with endTimeText = ...
+                with propertyId = ...
+                with propertyName = ...
+                with startTimeText = ...
+            Create_Service_Appointment: @actions.Create_Service_Appointment
+                with customerEmail = ...
+                with customerName = ...
+                with customerPhone = ...
+                with durationMinutes = ...
+                with endTimeText = ...
+                with mediatorId = ...
+                with mediatorName = ...
+                with parentRecordId = ...
+                with propertyId = ...
+                with propertyName = ...
+                with startTimeText = ...
+
+    actions:
+        Get_Properties:
+            label: "Get Properties"
+            description: "Get Properties"
+            target: "apex://AgentforceController"
+            inputs:
+                city: string
+                    label: "City"
+                    description: "City the visitor is looking in, e.g. Indore. Partial names are matched."
+                    is_required: True
+                configuration: string
+                    label: "Configuration (BHK)"
+                    description: "One BHK configuration exactly as stored on the property, e.g. 2 BHK, 3 BHK, Penthouse. Leave blank to return all configurations."
+                    is_required: False
+                priceMax: number
+                    label: "Price (Max)"
+                    description: "Upper end of the budget in INR. Leave blank for no upper limit."
+                    is_required: False
+                priceMin: number
+                    label: "Price (Min)"
+                    description: "Lower end of the budget in INR. Leave blank to start from 0."
+                    is_required: False
+            outputs:
+                isSuccess: boolean
+                    label: "Success"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Human readable outcome with a list of properties."
+                    is_displayable: True
+                    filter_from_agent: False
+                properties: list[object]
+                    label: "Properties"
+                    description: "List of Properties"
+                    complex_data_type_name: "@apexClassType/c__AgentforceController$PropertyInfo"
+                    is_displayable: True
+                    filter_from_agent: False
+                recordCount: integer
+                    label: "Record Count"
+                    description: "Number of properties"
+                    is_displayable: True
+                    filter_from_agent: False
+
+        Get_Properties_Details:
+            label: "Get Properties Details"
+            description: "Get Properties Details"
+            target: "apex://AgentforcePropertyDetailController"
+            inputs:
+                propertyId: string
+                    label: "Property Id"
+                    description: "Optional. Use when the Id is already known - skips name matching entirely."
+                    is_required: False
+                propertyName: string
+                    label: "Property Name"
+                    description: "Project name the visitor asked about. An exact name wins; otherwise partial names are matched."
+                    is_required: True
+            outputs:
+                address: string
+                    label: "Address"
+                    description: "Complete Property Address"
+                    is_displayable: True
+                    filter_from_agent: False
+                amenities: string
+                    label: "Amenities"
+                    description: "Every amenity across all unit types, de-duplicated."
+                    is_displayable: True
+                    filter_from_agent: False
+                city: string
+                    label: "City"
+                    description: "City of the property"
+                    is_displayable: True
+                    filter_from_agent: False
+                configurations: string
+                    label: "Configurations (BHK)"
+                    description: "Configurations of the Property"
+                    is_displayable: True
+                    filter_from_agent: False
+                description: string
+                    label: "Description"
+                    description: "Description"
+                    is_displayable: True
+                    filter_from_agent: False
+                documentCount: integer
+                    label: "Document Count"
+                    description: "Document Count"
+                    is_displayable: True
+                    filter_from_agent: False
+                documentLinks: string
+                    label: "Document Links"
+                    description: "Each shareable document as \"Type: Title - public URL\", one per line. Show these to the visitor as clickable links."
+                    is_displayable: True
+                    filter_from_agent: False
+                documents: list[object]
+                    label: "Documents"
+                    description: "Only files flagged Shareable With Visitors."
+                    complex_data_type_name: "@apexClassType/c__AgentforcePropertyDetailController$DocumentInfo"
+                    is_displayable: False
+                    filter_from_agent: False
+                isAvailable: boolean
+                    label: "Available"
+                    description: "False once the project is Sold Out."
+                    is_displayable: True
+                    filter_from_agent: False
+                isFound: boolean
+                    label: "Found"
+                    description: "False when no property answers to that name."
+                    is_displayable: False
+                    filter_from_agent: False
+                isSuccess: boolean
+                    label: "Success"
+                    description: "Success"
+                    is_displayable: False
+                    filter_from_agent: False
+                latitude: number
+                    label: "Latitude"
+                    description: "Latitude"
+                    is_displayable: False
+                    filter_from_agent: False
+                longitude: number
+                    label: "Longitude"
+                    description: "Longitude"
+                    is_displayable: False
+                    filter_from_agent: False
+                mediatorCount: integer
+                    label: "Mediator Count"
+                    description: "Mediator Count"
+                    is_displayable: True
+                    filter_from_agent: False
+                mediators: list[object]
+                    label: "Mediators"
+                    description: "Everyone who handles this project. Availability is a separate action."
+                    complex_data_type_name: "@apexClassType/c__AgentforcePropertyDetailController$MediatorContactInfo"
+                    is_displayable: True
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Human readable outcome, including the other names when a search was ambiguous."
+                    is_displayable: True
+                    filter_from_agent: False
+                name: string
+                    label: "Property Name"
+                    description: ""
+                    is_displayable: True
+                    filter_from_agent: False
+                possessionDate: object
+                    label: "Possession Date"
+                    description: ""
+                    complex_data_type_name: "lightning__dateType"
+                    is_displayable: False
+                    filter_from_agent: False
+                priceMax: number
+                    label: "Price (Max)"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                priceMin: number
+                    label: "Price (Min)"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                priceRange: string
+                    label: "Price Range"
+                    description: "Formatted range the chatbot should quote, e.g. INR 1.2 Cr - 1.8 Cr."
+                    is_displayable: False
+                    filter_from_agent: False
+                propertyId: string
+                    label: "Property Id"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                propertyType: string
+                    label: "Property Type"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                reraNumber: string
+                    label: "RERA Number"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                specificationCount: integer
+                    label: "Specification Count"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                specifications: list[object]
+                    label: "Specifications"
+                    description: "One entry per unit type on offer."
+                    complex_data_type_name: "@apexClassType/c__AgentforcePropertyDetailController$SpecificationInfo"
+                    is_displayable: False
+                    filter_from_agent: False
+                status: string
+                    label: "Status"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+
+        Get_Mediator:
+            label: "Get Mediator"
+            description: "Get Mediator"
+            target: "apex://AgentforceMediatorController"
+            inputs:
+                durationMinutes: integer
+                    label: "Duration (Minutes)"
+                    description: "Slot length in minutes when no End Time (IST Text) is given. Leave blank to use the 60 minute default."
+                    is_required: False
+                endTimeText: string
+                    label: "End Time (IST Text)"
+                    description: "Optional slot end as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock. Leave blank to use Duration (Minutes) instead."
+                    is_required: False
+                propertyId: string
+                    label: "Property Id"
+                    description: "Id of the property the visitor confirmed, taken from the Get Properties result. Always pass this when it is known."
+                    is_required: True
+                propertyName: string
+                    label: "Property Name"
+                    description: "Project name, used only when no Property Id is known. Partial names are matched."
+                    is_required: False
+                startTimeText: string
+                    label: "Start Time (IST Text)"
+                    description: "Required. The requested start as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock, e.g. 2026-09-09 15:00 for 3 PM."
+                    is_required: True
+            outputs:
+                isSuccess: boolean
+                    label: "Success"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                mediatorCount: integer
+                    label: "Mediator Count"
+                    description: ""
+                    is_displayable: True
+                    filter_from_agent: False
+                mediators: list[object]
+                    label: "Mediators"
+                    description: "Mediators free for the requested slot. Empty when nobody is available."
+                    complex_data_type_name: "@apexClassType/c__AgentforceMediatorController$MediatorInfo"
+                    is_displayable: True
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Human readable outcome the agent can say out loud."
+                    is_displayable: True
+                    filter_from_agent: False
+
+        Create_Service_Appointment:
+            label: "Create Service Appointment"
+            description: "Create Service Appointment"
+            target: "apex://AgentforceSiteVisitController"
+            inputs:
+                customerEmail: string
+                    label: "Customer Email"
+                    description: "Customer Email"
+                    is_required: True
+                customerName: string
+                    label: "Customer Name"
+                    description: "Visitor name. Falls back to the email handle when blank."
+                    is_required: True
+                customerPhone: string
+                    label: "Customer Phone"
+                    description: "Customer Phone"
+                    is_required: True
+                durationMinutes: integer
+                    label: "Duration (Minutes)"
+                    description: "Slot length in minutes when no End Time (IST Text) is given. Leave blank to use the 60 minute default."
+                    is_required: False
+                endTimeText: string
+                    label: "End Time (IST Text)"
+                    description: "Optional slot end as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock. Leave blank to use Duration (Minutes) instead."
+                    is_required: False
+                mediatorId: string
+                    label: "Mediator Id"
+                    description: "Contact Id of the mediator taking the visit, taken from the Get Mediator result for the option the visitor picked. Always pass this when it is known."
+                    is_required: True
+                mediatorName: string
+                    label: "Mediator Name"
+                    description: "Mediator name, used only when no Mediator Id is known."
+                    is_required: False
+                parentRecordId: string
+                    label: "Parent Record Id"
+                    description: "Optional. Overrides the Lead the appointment is filed under. Leave blank."
+                    is_required: False
+                propertyId: string
+                    label: "Property Id"
+                    description: "Id of the property being visited, taken from the Get Properties result. Always pass this when it is known."
+                    is_required: True
+                propertyName: string
+                    label: "Property Name"
+                    description: "Project name, used only when no Property Id is known."
+                    is_required: False
+                startTimeText: string
+                    label: "Start Time (IST Text)"
+                    description: "Required. The confirmed date and time as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock, e.g. 2026-09-09 15:00 for 3 PM."
+                    is_required: True
+            outputs:
+                appointmentNumber: string
+                    label: "Appointment Number"
+                    description: "The booking reference to read back to the visitor."
+                    is_displayable: True
+                    filter_from_agent: False
+                isSuccess: boolean
+                    label: "Success"
+                    description: "True only when the appointment was actually created."
+                    is_displayable: False
+                    filter_from_agent: False
+                leadId: string
+                    label: "Lead Id"
+                    description: "The visitor captured for follow-up."
+                    is_displayable: False
+                    filter_from_agent: False
+                mediatorId: string
+                    label: "Mediator Id"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                mediatorName: string
+                    label: "Mediator Name"
+                    description: ""
+                    is_displayable: True
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Human readable outcome the agent can say out loud."
+                    is_displayable: True
+                    filter_from_agent: False
+                propertyId: string
+                    label: "Property Id"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False
+                propertyName: string
+                    label: "Property Name"
+                    description: ""
+                    is_displayable: True
+                    filter_from_agent: False
+                scheduledEnd: object
+                    label: "Scheduled End"
+                    description: ""
+                    complex_data_type_name: "lightning__dateTimeStringType"
+                    is_displayable: False
+                    filter_from_agent: False
+                scheduledStart: object
+                    label: "Scheduled Start"
+                    description: "Booked start instant. Read it back to the visitor in IST."
+                    complex_data_type_name: "lightning__dateTimeStringType"
+                    is_displayable: True
+                    filter_from_agent: False
+                serviceAppointmentId: string
+                    label: "Service Appointment Id"
+                    description: ""
+                    is_displayable: False
+                    filter_from_agent: False

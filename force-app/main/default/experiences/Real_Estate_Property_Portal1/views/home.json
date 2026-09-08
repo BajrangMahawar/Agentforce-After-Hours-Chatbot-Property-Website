@@ -1,0 +1,62 @@
+{
+  "appPageId": "1ce60f30-c198-4bcc-883e-471bcea9acc0",
+  "componentName": "siteforce:sldsOneColLayout",
+  "dataProviders": [],
+  "id": "04f7522d-1101-4c35-8284-a11dd5ea9bd0",
+  "label": "Home",
+  "regions": [
+    {
+      "id": "63f2f7a6-868a-4b59-8412-bbb8ef17e1f5",
+      "regionName": "header",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "brandName": "Real Estate Property Portal",
+            "footerNote": "Prices are indicative and subject to change. RERA details available on request.",
+            "heroHeading": "The Legacy of an",
+            "heroHighlight": "Address",
+            "heroSubheading": "A curated portfolio across Delhi, Gurugram, Noida and Faridabad - with advisors on call after hours.",
+            "heroWatermark": "Discover"
+          },
+          "componentName": "c:propertyPortal",
+          "id": "943c26fd-be21-410b-886d-475a7a1d9b26",
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "22ee5cb7-df19-46ff-a6b0-9fbf0f66a3ae",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "id": "1318338f-5a40-4edd-bd38-f2c09cfe6ce9",
+      "regionName": "footer",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "Curated luxury residences across Delhi, Gurugram, Noida and Faridabad. Browse configurations, price bands and possession timelines.",
+            "title": "Real Estate Property Portal"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "a160d65f-5935-4ad8-87a0-b53f903d98fc",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "8b5d9fde-fe9e-4e96-8612-98ea9c28078d",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "home"
+}

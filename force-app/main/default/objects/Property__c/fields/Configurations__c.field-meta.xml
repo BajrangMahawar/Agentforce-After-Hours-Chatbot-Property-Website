@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Configurations__c</fullName>
+    <description>All BHK configurations available in the project. Multi-select so one query can answer "do you have a 3 BHK here?".</description>
+    <externalId>false</externalId>
+    <label>Configurations (BHK)</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <visibleLines>5</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>1 RK</fullName><default>false</default><label>1 RK</label></value>
+            <value><fullName>1 BHK</fullName><default>false</default><label>1 BHK</label></value>
+            <value><fullName>2 BHK</fullName><default>false</default><label>2 BHK</label></value>
+            <value><fullName>2.5 BHK</fullName><default>false</default><label>2.5 BHK</label></value>
+            <value><fullName>3 BHK</fullName><default>false</default><label>3 BHK</label></value>
+            <value><fullName>3.5 BHK</fullName><default>false</default><label>3.5 BHK</label></value>
+            <value><fullName>4 BHK</fullName><default>false</default><label>4 BHK</label></value>
+            <value><fullName>4+ BHK</fullName><default>false</default><label>4+ BHK</label></value>
+            <value><fullName>Duplex</fullName><default>false</default><label>Duplex</label></value>
+            <value><fullName>Penthouse</fullName><default>false</default><label>Penthouse</label></value>
+            <value><fullName>Plot</fullName><default>false</default><label>Plot</label></value>
+            <value><fullName>Shop</fullName><default>false</default><label>Shop</label></value>
+            <value><fullName>Office Space</fullName><default>false</default><label>Office Space</label></value>
+            <value><fullName>Studio</fullName><default>false</default><label>Studio</label></value>
+            <value><fullName>Warehouse Unit</fullName><default>false</default><label>Warehouse Unit</label></value>
+            <value><fullName>Club Facility</fullName><default>false</default><label>Club Facility</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

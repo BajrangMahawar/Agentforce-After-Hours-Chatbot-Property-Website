@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Property Collection</masterLabel>
+    <description>Public, filterable listing of the property portfolio for the Real Estate Property Portal site.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="brandName" type="String" label="Company Name" default="Real Estate Property Portal"
+                      description="Shown above the headline and in the footer."/>
+            <property name="heroWatermark" type="String" label="Watermark Word" default="Discover"
+                      description="Oversized italic word set behind the headline. Keep it to one word."/>
+            <property name="heroHeading" type="String" label="Headline" default="The Legacy of an"/>
+            <property name="heroHighlight" type="String" label="Headline (italic half)" default="Address"
+                      description="Set in italic straight after the headline."/>
+            <property name="heroSubheading" type="String" label="Sub-headline"
+                      default="A curated portfolio across Delhi, Gurugram, Noida and Faridabad - with advisors on call after hours."/>
+            <property name="footerNote" type="String" label="Footer Note"
+                      default="Prices are indicative and subject to change. RERA details available on request."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

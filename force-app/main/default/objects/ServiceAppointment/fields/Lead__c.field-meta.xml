@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lead__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The visitor captured for this site visit. ParentRecordId is polymorphic and can be pointed at any record by the caller, so this explicit lookup is what actually ties the booking back to one Lead. One Lead can have many site visits.</description>
+    <externalId>false</externalId>
+    <label>Lead</label>
+    <referenceTo>Lead</referenceTo>
+    <relationshipLabel>Site Visits</relationshipLabel>
+    <relationshipName>Site_Visits</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_Type__c</fullName>
+    <description>The specific unit this spec describes. Matches one of the values in Property.Configurations (BHK).</description>
+    <externalId>false</externalId>
+    <label>Unit Type</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>1 RK</fullName><default>false</default><label>1 RK</label></value>
+            <value><fullName>1 BHK</fullName><default>false</default><label>1 BHK</label></value>
+            <value><fullName>2 BHK</fullName><default>true</default><label>2 BHK</label></value>
+            <value><fullName>2.5 BHK</fullName><default>false</default><label>2.5 BHK</label></value>
+            <value><fullName>3 BHK</fullName><default>false</default><label>3 BHK</label></value>
+            <value><fullName>3.5 BHK</fullName><default>false</default><label>3.5 BHK</label></value>
+            <value><fullName>4 BHK</fullName><default>false</default><label>4 BHK</label></value>
+            <value><fullName>4+ BHK</fullName><default>false</default><label>4+ BHK</label></value>
+            <value><fullName>Duplex</fullName><default>false</default><label>Duplex</label></value>
+            <value><fullName>Penthouse</fullName><default>false</default><label>Penthouse</label></value>
+            <value><fullName>Plot</fullName><default>false</default><label>Plot</label></value>
+            <value><fullName>Shop</fullName><default>false</default><label>Shop</label></value>
+            <value><fullName>Office Space</fullName><default>false</default><label>Office Space</label></value>
+            <value><fullName>Studio</fullName><default>false</default><label>Studio</label></value>
+            <value><fullName>Warehouse Unit</fullName><default>false</default><label>Warehouse Unit</label></value>
+            <value><fullName>Club Facility</fullName><default>false</default><label>Club Facility</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

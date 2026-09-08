@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mediator_Name__c</fullName>
+    <description>Mirror of the mediator name. Master-detail fields cannot be used as related-list columns, so the Property page shows this instead of a bare auto-number.</description>
+    <externalId>false</externalId>
+    <formula>TRIM(BLANKVALUE(Mediator__r.FirstName, &quot;&quot;) &amp; &quot; &quot; &amp; Mediator__r.LastName)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>Mediator Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
