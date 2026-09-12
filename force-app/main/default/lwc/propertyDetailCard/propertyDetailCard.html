@@ -1,0 +1,128 @@
+<template>
+    <template lwc:if={isLoading}>
+        <div class="skeleton" aria-label="Loading property"></div>
+    </template>
+
+    <template lwc:elseif={hasDetail}>
+        <article class="detail">
+            <template lwc:if={detail.hasHero}>
+                <div class="frame frame--hero">
+                    <img class="frame__img" src={detail.hero.url} alt={detail.hero.altText}
+                         loading="lazy" onerror={handleImageError} />
+                    <span class={detail.statusClass}>{detail.status}</span>
+                </div>
+            </template>
+
+            <template lwc:if={detail.hasThumbnails}>
+                <div class="gallery">
+                    <template for:each={detail.thumbnails} for:item="shot">
+                        <a key={shot.key} class="gallery__item" href={shot.url}
+                           target="_blank" rel="noopener noreferrer" title={shot.title}>
+                            <img class="gallery__img" src={shot.url} alt={shot.altText}
+                                 loading="lazy" onerror={handleImageError} />
+                        </a>
+                    </template>
+                </div>
+            </template>
+
+            <div class="detail__body">
+                <template lwc:if={detail.hasNoHero}>
+                    <span class={detail.statusClassInline}>{detail.status}</span>
+                </template>
+                <p class="detail__city">{detail.city}</p>
+                <h4 class="detail__name">{detail.name}</h4>
+                <p class="detail__address">{detail.address}</p>
+
+                <dl class="facts">
+                    <div class="facts__cell">
+                        <dt>Price</dt>
+                        <dd class="facts__price">{detail.priceRange}</dd>
+                    </div>
+                    <div class="facts__cell">
+                        <dt>Configurations</dt>
+                        <dd>{detail.configurations}</dd>
+                    </div>
+                    <div class="facts__cell">
+                        <dt>Possession</dt>
+                        <dd>{detail.possession}</dd>
+                    </div>
+                    <div class="facts__cell">
+                        <dt>Type</dt>
+                        <dd>{detail.propertyType}</dd>
+                    </div>
+                </dl>
+
+                <template lwc:if={detail.description}>
+                    <p class="detail__text">{detail.description}</p>
+                </template>
+
+                <template lwc:if={detail.hasSpecifications}>
+                    <p class="detail__label">Unit plans</p>
+                    <ul class="specs">
+                        <template for:each={detail.specifications} for:item="spec">
+                            <li key={spec.key} class="specs__row">
+                                <span class="specs__type">{spec.unitType}</span>
+                                <span class="specs__area">
+                                    <template lwc:if={spec.carpetText}>{spec.carpetText}</template>
+                                    <template lwc:if={spec.builtUpText}>
+                                        <span class="specs__sep">·</span>{spec.builtUpText}
+                                    </template>
+                                </span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template lwc:if={detail.hasAmenities}>
+                    <p class="detail__label">Amenities</p>
+                    <div class="tags">
+                        <template for:each={detail.amenities} for:item="amenity">
+                            <span key={amenity.key} class="tags__item">{amenity.label}</span>
+                        </template>
+                    </div>
+                </template>
+
+                <template lwc:if={detail.hasDocuments}>
+                    <p class="detail__label">Documents</p>
+                    <template for:each={detail.documents} for:item="doc">
+                        <a key={doc.key} class="docs__row" href={doc.url}
+                           target="_blank" rel="noopener noreferrer">
+                            <span class="docs__ext">{doc.fileExtension}</span>
+                            <span class="docs__label">{doc.label}</span>
+                            <span class="docs__size">{doc.sizeText}</span>
+                        </a>
+                    </template>
+                </template>
+
+                <template lwc:if={detail.hasMediators}>
+                    <p class="detail__label">Your advisor</p>
+                    <template for:each={detail.mediators} for:item="mediator">
+                        <div key={mediator.key} class="advisor">
+                            <span class="advisor__avatar">{mediator.initials}</span>
+                            <div class="advisor__id">
+                                <p class="advisor__name">{mediator.name}</p>
+                                <p class="advisor__title">{mediator.title}</p>
+                            </div>
+                            <template lwc:if={mediator.hasCall}>
+                                <a class="advisor__btn" href={mediator.callHref}>Call</a>
+                            </template>
+                            <template lwc:if={mediator.hasMail}>
+                                <a class="advisor__btn" href={mediator.mailHref}>Email</a>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+
+                <button class="book" onclick={handleBookVisit}>Book a site visit</button>
+
+                <template lwc:if={detail.reraNumber}>
+                    <p class="detail__rera">RERA {detail.reraNumber}</p>
+                </template>
+            </div>
+        </article>
+    </template>
+
+    <template lwc:elseif={loadFailed}>
+        <p class="quiet">The details could not be loaded just now.</p>
+    </template>
+</template>

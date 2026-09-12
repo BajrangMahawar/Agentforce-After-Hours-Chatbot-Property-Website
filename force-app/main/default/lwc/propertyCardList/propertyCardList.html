@@ -1,0 +1,46 @@
+<template>
+    <template lwc:if={isLoading}>
+        <div class="rail rail--loading" aria-label="Loading properties">
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+        </div>
+    </template>
+
+    <template lwc:elseif={hasCards}>
+        <div class="rail" role="list">
+            <template for:each={cards} for:item="card">
+                <article key={card.recordId} class="pcard" role="listitem" tabindex="0"
+                         data-name={card.name}
+                         onclick={handleCardClick} onkeydown={handleCardKey}>
+                    <template lwc:if={card.hasImage}>
+                        <div class="frame">
+                            <img class="frame__img" src={card.heroImageUrl} alt={card.altText}
+                                 loading="lazy" onerror={handleImageError} />
+                            <span class={card.statusClass}>{card.status}</span>
+                            <template lwc:if={card.hasExtraImages}>
+                                <span class="frame__count">{card.extraImagesLabel}</span>
+                            </template>
+                        </div>
+                    </template>
+                    <div class="pcard__body">
+                        <template lwc:if={card.hasNoImage}>
+                            <span class={card.statusClassInline}>{card.status}</span>
+                        </template>
+                        <p class="pcard__city">{card.city}</p>
+                        <h4 class="pcard__name">{card.name}</h4>
+                        <p class="pcard__config">{card.configurations}</p>
+                        <div class="pcard__foot">
+                            <span class="pcard__price">{card.priceRange}</span>
+                            <span class="pcard__possession">{card.possession}</span>
+                        </div>
+                        <span class="pcard__cta">View details &rsaquo;</span>
+                    </div>
+                </article>
+            </template>
+        </div>
+    </template>
+
+    <template lwc:elseif={loadFailed}>
+        <p class="quiet">Photographs could not be loaded just now.</p>
+    </template>
+</template>

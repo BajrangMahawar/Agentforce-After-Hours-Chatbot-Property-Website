@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Property Cards</masterLabel>
+    <description>Renders a property search answer as a rail of picture cards inside the messaging window.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="lightning__listType" itemTypeName="c__propertyListResponse" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
