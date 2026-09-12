@@ -1,0 +1,18 @@
+{
+    "renderer": {
+        "componentOverrides": {
+            "$": {
+                "definition": "c/propertyDetailCard"
+            }
+        }
+    },
+    "collection": {
+        "renderer": {
+            "componentOverrides": {
+                "$": {
+                    "definition": "c/propertyDetailCard"
+                }
+            }
+        }
+    }
+}

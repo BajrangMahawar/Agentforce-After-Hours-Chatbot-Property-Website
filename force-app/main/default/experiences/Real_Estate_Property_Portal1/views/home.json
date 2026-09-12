@@ -26,6 +26,21 @@
           "renderPriority": "NEUTRAL",
           "renditionMap": {},
           "type": "component"
+        },
+        {
+          "componentAttributes": {
+            "agentName": "Property Consultant",
+            "agentTagline": "Online · replies instantly",
+            "brandName": "DLF",
+            "welcomeMessage": "Hello! I am your Property Consultant. Tell me a city, a configuration or a budget and I will pull up the residences with photographs.",
+            "launcherLabel": "Chat with a consultant",
+            "openOnLoad": false
+          },
+          "componentName": "c:propertyConsultantChat",
+          "id": "5f1c9a24-7b3e-4d06-9a41-2c8ef4b1d730",
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
         }
       ],
       "id": "22ee5cb7-df19-46ff-a6b0-9fbf0f66a3ae",

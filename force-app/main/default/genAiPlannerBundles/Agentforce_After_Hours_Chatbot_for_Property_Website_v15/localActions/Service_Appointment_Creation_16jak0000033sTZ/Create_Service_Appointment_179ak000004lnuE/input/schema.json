@@ -1,0 +1,84 @@
+{
+  "required" : [ "customerEmail", "customerName", "customerPhone", "mediatorId", "propertyId", "startTimeText" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "customerEmail" : {
+      "title" : "Customer Email",
+      "description" : "Customer Email",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "customerName" : {
+      "title" : "Customer Name",
+      "description" : "Visitor name. Falls back to the email handle when blank.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "customerPhone" : {
+      "title" : "Customer Phone",
+      "description" : "Customer Phone",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "durationMinutes" : {
+      "title" : "Duration (Minutes)",
+      "description" : "Slot length in minutes when no End Time (IST Text) is given. Leave blank to use the 60 minute default.",
+      "lightning:type" : "lightning__integerType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "endTimeText" : {
+      "title" : "End Time (IST Text)",
+      "description" : "Optional slot end as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock. Leave blank to use Duration (Minutes) instead.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "mediatorId" : {
+      "title" : "Mediator Id",
+      "description" : "Contact Id of the mediator taking the visit, taken from the Get Mediator result for the option the visitor picked. Always pass this when it is known.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "mediatorName" : {
+      "title" : "Mediator Name",
+      "description" : "Mediator name, used only when no Mediator Id is known.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "parentRecordId" : {
+      "title" : "Parent Record Id",
+      "description" : "Optional. Overrides the Lead the appointment is filed under. Leave blank.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "propertyId" : {
+      "title" : "Property Id",
+      "description" : "Id of the property being visited, taken from the Get Properties result. Always pass this when it is known.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "propertyName" : {
+      "title" : "Property Name",
+      "description" : "Project name, used only when no Property Id is known.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "startTimeText" : {
+      "title" : "Start Time (IST Text)",
+      "description" : "Required. The confirmed date and time as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock, e.g. 2026-09-09 15:00 for 3 PM.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

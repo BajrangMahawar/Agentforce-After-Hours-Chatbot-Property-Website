@@ -68,6 +68,16 @@ public without sharing class AgentforceDataService {
             : value.format('d MMM yyyy, h:mm a', BUSINESS_TIMEZONE) + ' IST';
     }
 
+    /**
+     * Renders an instant in the exact shape parseBusinessTime accepts, so a
+     * value handed to the agent can be passed straight back into booking
+     * without a lossy prose round trip. formatBusinessTime stays the
+     * human-readable form; this one is the machine-readable twin.
+     */
+    public static String formatBusinessTimeForRoundTrip(Datetime value) {
+        return value == null ? null : value.format('yyyy-MM-dd HH:mm', BUSINESS_TIMEZONE);
+    }
+
     public static Map<Id, Contact> mediatorsForProperty(Id propertyId) {
         Map<Id, Contact> mediators = new Map<Id, Contact>();
         for (Mediator_Property__c mp : [
@@ -105,6 +115,42 @@ public without sharing class AgentforceDataService {
             AgentforceLogger.utc(slotStart) + ' and ' + AgentforceLogger.utc(slotEnd) +
             ' -> busy ' + busy.size() + ' ' + busy);
         return busy;
+    }
+
+    /**
+     * Every non-cancelled appointment for these mediators that overlaps the
+     * window, grouped by mediator. One query for a whole day of candidate
+     * slots, so the slot search does not go back to the database per slot.
+     * Uses the same status filter as busyMediators.
+     */
+    public static Map<Id, List<ServiceAppointment>> appointmentsForMediators(
+        Set<Id> mediatorIds, Datetime windowStart, Datetime windowEnd
+    ) {
+        Map<Id, List<ServiceAppointment>> byMediator = new Map<Id, List<ServiceAppointment>>();
+        if (mediatorIds == null || mediatorIds.isEmpty()) {
+            AgentforceLogger.log(LOG, 'APPOINTMENTS', 'no mediator ids given, nothing to load');
+            return byMediator;
+        }
+        Integer rows = 0;
+        for (ServiceAppointment sa : [
+            SELECT Mediator__c, SchedStartTime, SchedEndTime
+            FROM ServiceAppointment
+            WHERE Mediator__c IN :mediatorIds
+              AND SchedStartTime < :windowEnd
+              AND SchedEndTime > :windowStart
+              AND StatusCategory != 'Canceled'
+            WITH USER_MODE
+        ]) {
+            if (!byMediator.containsKey(sa.Mediator__c)) {
+                byMediator.put(sa.Mediator__c, new List<ServiceAppointment>());
+            }
+            byMediator.get(sa.Mediator__c).add(sa);
+            rows++;
+        }
+        AgentforceLogger.log(LOG, 'APPOINTMENTS', 'window ' + AgentforceLogger.utc(windowStart) +
+            ' to ' + AgentforceLogger.utc(windowEnd) + ' over ' + mediatorIds.size() +
+            ' mediator(s) -> ' + rows + ' appointment(s) across ' + byMediator.size() + ' mediator(s)');
+        return byMediator;
     }
 
     public static ServiceAppointment clashFor(Id mediatorId, Datetime slotStart, Datetime slotEnd) {

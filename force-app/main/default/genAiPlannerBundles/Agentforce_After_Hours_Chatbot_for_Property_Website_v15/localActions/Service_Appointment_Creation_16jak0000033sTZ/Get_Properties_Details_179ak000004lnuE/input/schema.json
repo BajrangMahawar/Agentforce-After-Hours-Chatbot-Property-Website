@@ -1,0 +1,21 @@
+{
+  "required" : [ "propertyName" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "propertyId" : {
+      "title" : "Property Id",
+      "description" : "Optional. Use when the Id is already known - skips name matching entirely.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "propertyName" : {
+      "title" : "Property Name",
+      "description" : "Project name the visitor asked about. An exact name wins; otherwise partial names are matched.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

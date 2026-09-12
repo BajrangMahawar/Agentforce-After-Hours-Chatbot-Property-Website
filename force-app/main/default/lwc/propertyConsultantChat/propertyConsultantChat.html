@@ -1,0 +1,224 @@
+<template>
+    <!-- Closed state: a single launcher pinned to the corner. -->
+    <template lwc:if={showLauncher}>
+        <button class="launcher" onclick={handleLauncher} title={launcherLabel}>
+            <span class="launcher__mark">{brandName}</span>
+            <span class="launcher__text">{launcherLabel}</span>
+            <span class="launcher__dot" aria-hidden="true"></span>
+        </button>
+    </template>
+
+    <template lwc:if={showPanel}>
+        <section class={panelClass} aria-label="Property Consultant chat">
+            <!-- Header -->
+            <header class="head">
+                <span class="head__avatar" aria-hidden="true">{brandName}</span>
+                <div class="head__id">
+                    <p class="head__name">{agentName}</p>
+                    <p class="head__status">{agentTagline}</p>
+                </div>
+                <button class="head__btn" onclick={handleMinimise} title={minimiseLabel} aria-label={minimiseLabel}>
+                    &#8211;
+                </button>
+                <button class="head__btn" onclick={handleClose} title="Close chat" aria-label="Close chat">
+                    &#10005;
+                </button>
+            </header>
+
+            <!-- Message stream -->
+            <div class="stream" role="log" aria-live="polite">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class="row">
+                        <!-- Plain text, agent or visitor -->
+                        <template lwc:if={msg.isText}>
+                            <template lwc:if={msg.fromAgent}>
+                                <div class="bubble bubble--agent">{msg.text}</div>
+                            </template>
+                            <template lwc:else>
+                                <div class="bubble bubble--visitor">{msg.text}</div>
+                            </template>
+                        </template>
+
+                        <!-- Suggestion chips -->
+                        <template lwc:elseif={msg.isChips}>
+                            <div class="chips">
+                                <template for:each={msg.chips} for:item="chip">
+                                    <button key={chip.key} class="chips__item" data-chip={chip.label}
+                                            onclick={handleChip}>{chip.label}</button>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- The shortlist: a rail of picture cards -->
+                        <template lwc:elseif={msg.isProperties}>
+                            <div class="rail">
+                                <template for:each={msg.cards} for:item="card">
+                                    <article key={card.recordId} class="pcard" tabindex="0" role="button"
+                                             data-id={card.recordId}
+                                             onclick={handleCardClick} onkeydown={handleCardKey}>
+                                        <template lwc:if={card.hasImage}>
+                                            <div class="frame">
+                                                <img class="frame__img" src={card.heroImageUrl} alt={card.altText}
+                                                     loading="lazy" onerror={handleImageError} />
+                                                <span class={card.statusClass}>{card.status}</span>
+                                                <template lwc:if={card.hasExtraImages}>
+                                                    <span class="frame__count">{card.extraImagesLabel}</span>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div class="pcard__body">
+                                            <template lwc:if={card.hasNoImage}>
+                                                <span class={card.statusClassInline}>{card.status}</span>
+                                            </template>
+                                            <p class="pcard__city">{card.city}</p>
+                                            <h4 class="pcard__name">{card.name}</h4>
+                                            <p class="pcard__config">{card.configurations}</p>
+                                            <div class="pcard__foot">
+                                                <span class="pcard__price">{card.priceRange}</span>
+                                                <span class="pcard__possession">{card.possession}</span>
+                                            </div>
+                                            <span class="pcard__cta">View details &rsaquo;</span>
+                                        </div>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- One property, opened out -->
+                        <template lwc:elseif={msg.isDetail}>
+                            <article class="detail">
+                                <template lwc:if={msg.detail.hasHero}>
+                                    <div class="frame frame--hero">
+                                        <img class="frame__img" src={msg.detail.hero.url} alt={msg.detail.hero.altText}
+                                             loading="lazy" onerror={handleImageError} />
+                                        <span class={msg.detail.statusClass}>{msg.detail.status}</span>
+                                    </div>
+                                </template>
+
+                                <template lwc:if={msg.detail.hasThumbnails}>
+                                    <div class="gallery">
+                                        <template for:each={msg.detail.thumbnails} for:item="shot">
+                                            <a key={shot.key} class="gallery__item" href={shot.url}
+                                               target="_blank" rel="noopener noreferrer" title={shot.title}>
+                                                <img class="gallery__img" src={shot.url} alt={shot.altText}
+                                                     loading="lazy" onerror={handleImageError} />
+                                            </a>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <div class="detail__body">
+                                    <p class="detail__city">{msg.detail.city}</p>
+                                    <h4 class="detail__name">{msg.detail.name}</h4>
+                                    <p class="detail__address">{msg.detail.address}</p>
+
+                                    <dl class="facts">
+                                        <div class="facts__cell">
+                                            <dt>Price</dt>
+                                            <dd class="facts__price">{msg.detail.priceRange}</dd>
+                                        </div>
+                                        <div class="facts__cell">
+                                            <dt>Configurations</dt>
+                                            <dd>{msg.detail.configurations}</dd>
+                                        </div>
+                                        <div class="facts__cell">
+                                            <dt>Possession</dt>
+                                            <dd>{msg.detail.possession}</dd>
+                                        </div>
+                                        <div class="facts__cell">
+                                            <dt>Type</dt>
+                                            <dd>{msg.detail.propertyType}</dd>
+                                        </div>
+                                    </dl>
+
+                                    <template lwc:if={msg.detail.description}>
+                                        <p class="detail__text">{msg.detail.description}</p>
+                                    </template>
+
+                                    <template lwc:if={msg.detail.hasSpecifications}>
+                                        <p class="detail__label">Unit plans</p>
+                                        <ul class="specs">
+                                            <template for:each={msg.detail.specifications} for:item="spec">
+                                                <li key={spec.key} class="specs__row">
+                                                    <span class="specs__type">{spec.unitType}</span>
+                                                    <span class="specs__area">
+                                                        <template lwc:if={spec.carpetText}>{spec.carpetText}</template>
+                                                        <template lwc:if={spec.builtUpText}>
+                                                            <span class="specs__sep">·</span>{spec.builtUpText}
+                                                        </template>
+                                                    </span>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </template>
+
+                                    <template lwc:if={msg.detail.hasAmenities}>
+                                        <p class="detail__label">Amenities</p>
+                                        <div class="tags">
+                                            <template for:each={msg.detail.amenities} for:item="amenity">
+                                                <span key={amenity.key} class="tags__item">{amenity.label}</span>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <template lwc:if={msg.detail.hasDocuments}>
+                                        <p class="detail__label">Documents</p>
+                                        <div class="docs">
+                                            <template for:each={msg.detail.documents} for:item="doc">
+                                                <a key={doc.key} class="docs__row" href={doc.url}
+                                                   target="_blank" rel="noopener noreferrer">
+                                                    <span class="docs__ext">{doc.fileExtension}</span>
+                                                    <span class="docs__label">{doc.label}</span>
+                                                    <span class="docs__size">{doc.sizeText}</span>
+                                                </a>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <template lwc:if={msg.detail.hasMediators}>
+                                        <p class="detail__label">Your advisor</p>
+                                        <template for:each={msg.detail.mediators} for:item="mediator">
+                                            <div key={mediator.key} class="advisor">
+                                                <span class="advisor__avatar">{mediator.initials}</span>
+                                                <div class="advisor__id">
+                                                    <p class="advisor__name">{mediator.name}</p>
+                                                    <p class="advisor__title">{mediator.title}</p>
+                                                </div>
+                                                <template lwc:if={mediator.hasCall}>
+                                                    <a class="advisor__btn" href={mediator.callHref}>Call</a>
+                                                </template>
+                                                <template lwc:if={mediator.hasMail}>
+                                                    <a class="advisor__btn" href={mediator.mailHref}>Email</a>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </template>
+
+                                    <template lwc:if={msg.detail.reraNumber}>
+                                        <p class="detail__rera">RERA {msg.detail.reraNumber}</p>
+                                    </template>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+
+                <template lwc:if={isThinking}>
+                    <div class="row">
+                        <div class="bubble bubble--agent typing" aria-label="Consultant is typing">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Composer -->
+            <footer class="composer">
+                <input class="composer__input" type="text" value={draft} placeholder="Type your question here..."
+                       aria-label="Message" onchange={handleDraft} oninput={handleDraft} onkeydown={handleKeyDown} />
+                <button class="composer__send" onclick={handleSend} disabled={isSendDisabled}
+                        title="Send" aria-label="Send message">&#10148;</button>
+            </footer>
+        </section>
+    </template>
+</template>

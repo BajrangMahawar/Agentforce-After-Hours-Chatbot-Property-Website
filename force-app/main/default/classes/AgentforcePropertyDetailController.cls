@@ -1,6 +1,8 @@
 public with sharing class AgentforcePropertyDetailController {
     private static final Integer MAX_CHILD_ROWS = 50;
     private static final String LOG = 'PROPERTY_DETAIL';
+    /** The Document Type that marks a file as photography of the project. */
+    private static final String GALLERY_TYPE = 'Image / Gallery';
 
     @InvocableMethod(
         label='Get Property Detail'
@@ -23,6 +25,7 @@ public with sharing class AgentforcePropertyDetailController {
             res.specifications = new List<SpecificationInfo>();
             res.mediators = new List<MediatorContactInfo>();
             res.documents = new List<DocumentInfo>();
+            res.imageUrls = new List<String>();
             try {
                 if (req == null) {
                     AgentforceLogger.log(LOG, 'REQUEST #' + index, 'the request object was null');
@@ -67,6 +70,8 @@ public with sharing class AgentforcePropertyDetailController {
         populateSpecifications(res, p.Id);
         populateMediators(res, p.Id);
         populateDocuments(res, p.Id);
+
+        res.profile = buildProfile(res);
 
         if (matches.size() == 1) {
             return 'Details for ' + p.Name + '.';
@@ -133,6 +138,9 @@ public with sharing class AgentforcePropertyDetailController {
     private static void populateProperty(PropertyDetailResult res, Property__c p) {
         res.propertyId = p.Id;
         res.name = p.Name;
+        // A one-entry list, because a custom output component binds to a
+        // collection. See PropertyCardRef.
+        res.card = new List<PropertyCardRef>{ new PropertyCardRef(p.Id, p.Name) };
         res.city = p.City__c;
         res.address = p.Address__c;
         res.configurations = p.Configurations__c;
@@ -210,16 +218,111 @@ public with sharing class AgentforcePropertyDetailController {
             LIMIT :MAX_CHILD_ROWS
         ];
         Map<Id, String> links = publicLinks(shareable);
+        Map<Id, String> bytes = imageLinks(shareable);
         for (ContentVersion cv : shareable) {
+            // Project photography is drawn inline, so it needs the bytes URL and
+            // belongs in the gallery, not in the document download list.
+            if (GALLERY_TYPE.equals(cv.Document_Type__c)) {
+                String shot = bytes.get(cv.Id);
+                if (String.isNotBlank(shot)) {
+                    res.imageUrls.add(shot);
+                }
+                continue;
+            }
             DocumentInfo info = new DocumentInfo(cv);
             info.downloadUrl = links.get(cv.Id);
             res.documents.add(info);
         }
+        res.imageCount = res.imageUrls.size();
         res.documentCount = res.documents.size();
         res.documentLinks = flattenDocuments(res.documents);
         AgentforceLogger.log(LOG, 'DOCS', 'shareable with visitors=' + res.documentCount +
             ' of ' + documentIds.size() + ' linked');
         AgentforceLogger.log(LOG, 'DOCS', 'flattened link text length=' + res.documentLinks.length());
+    }
+
+    /**
+     * The whole property as one block of markdown, ready to be sent to the
+     * visitor verbatim.
+     *
+     * The messaging channel renders markdown but cannot host a custom Lightning
+     * component, so an image only reaches the visitor as ![](url) inside the
+     * agent's own reply. Handing the agent one finished string - rather than
+     * twenty fields to assemble - is what keeps the photographs, the areas and
+     * the document links intact, since the model copies the block instead of
+     * rewriting it.
+     */
+    private static String buildProfile(PropertyDetailResult res) {
+        List<String> out = new List<String>();
+
+        for (String url : res.imageUrls) {
+            out.add('![' + res.name + '](' + url + ')');
+        }
+        out.add('## ' + res.name);
+
+        List<String> facts = new List<String>();
+        if (String.isNotBlank(res.propertyType)) { facts.add('**Type:** ' + res.propertyType); }
+        if (String.isNotBlank(res.city))         { facts.add('**City:** ' + res.city); }
+        if (String.isNotBlank(res.address))      { facts.add('**Address:** ' + res.address); }
+        if (String.isNotBlank(res.priceRange))   { facts.add('**Price:** ' + res.priceRange); }
+        if (String.isNotBlank(res.configurations)) {
+            facts.add('**Configurations:** ' + res.configurations.replace(';', ', '));
+        }
+        if (res.possessionDate != null)          { facts.add('**Possession:** ' + res.possessionDate.format()); }
+        if (String.isNotBlank(res.status))       { facts.add('**Status:** ' + res.status); }
+        if (String.isNotBlank(res.reraNumber))   { facts.add('**RERA:** ' + res.reraNumber); }
+        for (String f : facts) {
+            out.add('- ' + f);
+        }
+
+        if (String.isNotBlank(res.description)) {
+            out.add('');
+            out.add(res.description);
+        }
+
+        if (!res.specifications.isEmpty()) {
+            out.add('');
+            out.add('**Unit plans**');
+            for (SpecificationInfo spec : res.specifications) {
+                List<String> bits = new List<String>();
+                if (String.isNotBlank(spec.unitType)) { bits.add(spec.unitType); }
+                if (spec.carpetArea != null)   { bits.add(spec.carpetArea + ' sq ft carpet'); }
+                if (spec.builtUpArea != null)  { bits.add(spec.builtUpArea + ' sq ft built-up'); }
+                if (!bits.isEmpty()) {
+                    out.add('- ' + String.join(bits, ' - '));
+                }
+            }
+        }
+
+        if (String.isNotBlank(res.amenities)) {
+            out.add('');
+            out.add('**Amenities:** ' + res.amenities.replace('; ', ', ').replace(';', ', '));
+        }
+
+        if (!res.documents.isEmpty()) {
+            out.add('');
+            out.add('**Documents**');
+            for (DocumentInfo doc : res.documents) {
+                String label = String.isBlank(doc.documentType) ? doc.title : doc.documentType;
+                if (String.isBlank(doc.downloadUrl)) {
+                    out.add('- ' + label);
+                } else {
+                    out.add('- [' + label + '](' + doc.downloadUrl + ')');
+                }
+            }
+        }
+
+        if (!res.mediators.isEmpty()) {
+            MediatorContactInfo m = res.mediators[0];
+            out.add('');
+            String line = '**Your advisor:** ' + m.name;
+            String phone = String.isNotBlank(m.mobilePhone) ? m.mobilePhone : m.phone;
+            if (String.isNotBlank(phone)) { line += ' - ' + phone; }
+            if (String.isNotBlank(m.email)) { line += ' - ' + m.email; }
+            out.add(line);
+        }
+
+        return String.join(out, '\n');
     }
 
     /**
@@ -253,15 +356,31 @@ public with sharing class AgentforcePropertyDetailController {
         return new LinkIssuer().issue(versions);
     }
 
+    /**
+     * The same files, but as URLs that return the bytes rather than a viewer page.
+     *
+     * DistributionPublicUrl serves an HTML preview page, which is what a visitor
+     * should open for a brochure but is useless inside an <img> tag - the browser
+     * gets markup where it expected a JPEG and draws a broken image. For anything
+     * a card renders inline, ContentDownloadUrl is the one that works.
+     */
+    public static Map<Id, String> imageLinks(List<ContentVersion> versions) {
+        return new LinkIssuer().issueImages(versions);
+    }
+
     /** Runs unrestricted for the same reason the document read does: the files
      *  belong to whoever uploaded them, not to the agent user. */
     private without sharing class LinkIssuer {
         private Map<Id, String> issue(List<ContentVersion> versions) {
-            return issueLinks(versions);
+            return issueLinks(versions, false);
+        }
+
+        private Map<Id, String> issueImages(List<ContentVersion> versions) {
+            return issueLinks(versions, true);
         }
     }
 
-    private static Map<Id, String> issueLinks(List<ContentVersion> versions) {
+    private static Map<Id, String> issueLinks(List<ContentVersion> versions, Boolean forImage) {
         Map<Id, String> urls = new Map<Id, String>();
         if (versions.isEmpty()) {
             return urls;
@@ -273,12 +392,13 @@ public with sharing class AgentforcePropertyDetailController {
         }
 
         for (ContentDistribution cd : [
-            SELECT ContentVersionId, DistributionPublicUrl
+            SELECT ContentVersionId, DistributionPublicUrl, ContentDownloadUrl
             FROM ContentDistribution
             WHERE ContentVersionId IN :versionIds
         ]) {
-            if (String.isNotBlank(cd.DistributionPublicUrl)) {
-                urls.put(cd.ContentVersionId, cd.DistributionPublicUrl);
+            String url = pick(cd, forImage);
+            if (String.isNotBlank(url)) {
+                urls.put(cd.ContentVersionId, url);
             }
         }
         AgentforceLogger.log(LOG, 'DOCS', 'existing public links=' + urls.size() +
@@ -320,16 +440,25 @@ public with sharing class AgentforcePropertyDetailController {
         // DistributionPublicUrl is populated by the platform on insert, so the
         // value is only readable once the rows are queried back.
         for (ContentDistribution cd : [
-            SELECT ContentVersionId, DistributionPublicUrl
+            SELECT ContentVersionId, DistributionPublicUrl, ContentDownloadUrl
             FROM ContentDistribution WHERE Id IN :newIds
         ]) {
-            if (String.isNotBlank(cd.DistributionPublicUrl)) {
-                urls.put(cd.ContentVersionId, cd.DistributionPublicUrl);
+            String url = pick(cd, forImage);
+            if (String.isNotBlank(url)) {
+                urls.put(cd.ContentVersionId, url);
             }
         }
         AgentforceLogger.log(LOG, 'DOCS', 'created ' + newIds.size() +
             ' public link(s), total=' + urls.size());
         return urls;
+    }
+
+    /** The download URL for an inline image, the viewer page for everything else. */
+    private static String pick(ContentDistribution cd, Boolean forImage) {
+        if (forImage && String.isNotBlank(cd.ContentDownloadUrl)) {
+            return cd.ContentDownloadUrl;
+        }
+        return cd.DistributionPublicUrl;
     }
 
     public class PropertyDetailRequest {
@@ -419,8 +548,51 @@ public with sharing class AgentforcePropertyDetailController {
         @InvocableVariable(label='Documents' description='Only files flagged Shareable With Visitors.')
         public List<DocumentInfo> documents;
 
+        @InvocableVariable(label='Profile' description='THE WHOLE ANSWER, already written as markdown with the photographs, facts, unit plans, amenities, documents and advisor. Send this to the visitor exactly as it is. Do not rewrite it, do not summarise it, and do not rebuild it from the other fields.')
+        public String profile;
+
+        @InvocableVariable(label='Image Count')
+        public Integer imageCount = 0;
+
+        @InvocableVariable(label='Image Urls' description='Internal. Public image links already embedded in Profile.')
+        public List<String> imageUrls = new List<String>();
+
         @InvocableVariable(label='Document Links' description='Each shareable document as "Type: Title - public URL", one per line. Show these to the visitor as clickable links.')
         public String documentLinks;
+
+        /**
+         * The same property again, as one object rather than as flat fields.
+         *
+         * Agentforce flattens this result, so every field above arrives on its
+         * own and there is nothing for a custom output component to bind to.
+         * A component renders one typed value, so the property is handed over a
+         * second time here, wrapped, purely so the card has something to attach
+         * to. The agent's LLM ignores it - the flat fields above are what it
+         * reads.
+         */
+        @InvocableVariable(label='Property Card' description='Internal. The property as a single object, for the display card. Not for reading out loud.')
+        public List<PropertyCardRef> card = new List<PropertyCardRef>();
+    }
+
+    /**
+     * The anchor a custom output component binds to. It carries only the Id -
+     * the card fetches everything it draws itself, so nothing shown can drift
+     * from what the record actually says.
+     */
+    public class PropertyCardRef {
+        @InvocableVariable(label='Property Id')
+        public String propertyId;
+
+        @InvocableVariable(label='Property Name')
+        public String name;
+
+        public PropertyCardRef() {
+        }
+
+        public PropertyCardRef(String propertyId, String name) {
+            this.propertyId = propertyId;
+            this.name = name;
+        }
     }
 
     public class SpecificationInfo {

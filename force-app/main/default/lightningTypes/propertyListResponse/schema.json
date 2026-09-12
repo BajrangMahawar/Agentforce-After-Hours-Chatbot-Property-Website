@@ -1,0 +1,5 @@
+{
+  "title": "Property List Response",
+  "description": "The shortlist of properties returned by the Get Properties action.",
+  "lightning:type": "@apexClassType/c__AgentforceController$PropertyInfo"
+}

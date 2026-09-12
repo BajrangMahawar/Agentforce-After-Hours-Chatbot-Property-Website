@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EmbeddedServiceConfig xmlns="http://soap.sforce.com/2006/04/metadata">
-    <areGuestUsersAllowed>false</areGuestUsersAllowed>
+    <areGuestUsersAllowed>true</areGuestUsersAllowed>
     <branding>EmbeddedServiceConfig_BrandingSet_1a07f71ea33</branding>
     <clientVersion>WebV2</clientVersion>
     <deploymentFeature>EmbeddedMessaging</deploymentFeature>

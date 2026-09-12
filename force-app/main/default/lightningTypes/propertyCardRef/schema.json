@@ -1,0 +1,5 @@
+{
+    "title": "Property Card Reference",
+    "description": "The property whose full profile the Get Properties Details action returned.",
+    "lightning:type": "@apexClassType/c__AgentforcePropertyDetailController$PropertyCardRef"
+}

@@ -76,6 +76,11 @@
     <!-- The booking action resolves the property and mediator through this
          permission set, so it needs the site-visit class too. -->
     <classAccesses><apexClass>AgentforceSiteVisitController</apexClass><enabled>true</enabled></classAccesses>
+    <!-- The picture cards in the messaging window fetch their own rows - hero
+         image and all - through PropertyChatController. Without this the agent
+         answers in text but every card comes back empty, because the component's
+         Apex call is refused rather than the card failing visibly. -->
+    <classAccesses><apexClass>PropertyChatController</apexClass><enabled>true</enabled></classAccesses>
     <tabSettings><tab>Property__c</tab><visibility>Visible</visibility></tabSettings>
     <tabSettings><tab>Property_Specification__c</tab><visibility>Visible</visibility></tabSettings>
 </PermissionSet>

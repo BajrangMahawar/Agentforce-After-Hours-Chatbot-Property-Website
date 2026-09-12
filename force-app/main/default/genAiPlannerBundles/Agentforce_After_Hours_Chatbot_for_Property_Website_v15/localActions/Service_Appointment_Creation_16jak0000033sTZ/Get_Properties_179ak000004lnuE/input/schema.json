@@ -1,0 +1,35 @@
+{
+  "required" : [ "city" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "city" : {
+      "title" : "City",
+      "description" : "City the visitor is looking in, e.g. Indore. Partial names are matched.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "configuration" : {
+      "title" : "Configuration (BHK)",
+      "description" : "One BHK configuration exactly as stored on the property, e.g. 2 BHK, 3 BHK, Penthouse. Leave blank to return all configurations.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "priceMax" : {
+      "title" : "Price (Max)",
+      "description" : "Upper end of the budget in INR. Leave blank for no upper limit.",
+      "lightning:type" : "lightning__numberType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "priceMin" : {
+      "title" : "Price (Min)",
+      "description" : "Lower end of the budget in INR. Leave blank to start from 0.",
+      "lightning:type" : "lightning__numberType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

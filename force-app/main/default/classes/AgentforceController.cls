@@ -51,6 +51,7 @@ public with sharing class AgentforceController {
                         ' priceMax=' + AgentforceLogger.show(req.priceMax));
                 }
                 searchWithFallback(req, res);
+                res.listing = buildListing(res.properties);
                 res.isSuccess = true;
                 AgentforceLogger.log(LOG, 'RESULT #' + index,
                     'isSuccess=true recordCount=' + res.recordCount +
@@ -218,6 +219,101 @@ public with sharing class AgentforceController {
         return infos;
     }
 
+    /**
+     * One hero photograph per property, as a URL the browser can put in an
+     * <img>. Runs once for the whole result set rather than once per row.
+     *
+     * Only files typed "Image / Gallery" count - a brochure uploaded as a jpg
+     * is a document, not the picture of the project.
+     */
+    private static Map<Id, String> heroImages(List<PropertyInfo> infos) {
+        Map<Id, String> heroes = new Map<Id, String>();
+        Set<Id> propertyIds = new Set<Id>();
+        for (PropertyInfo info : infos) {
+            if (String.isNotBlank(info.propertyId)) {
+                propertyIds.add((Id) info.propertyId);
+            }
+        }
+        if (propertyIds.isEmpty()) {
+            return heroes;
+        }
+
+        Map<Id, Id> documentToProperty = new Map<Id, Id>();
+        for (ContentDocumentLink link : [
+            SELECT ContentDocumentId, LinkedEntityId
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId IN :propertyIds
+            LIMIT 2000
+        ]) {
+            documentToProperty.put(link.ContentDocumentId, link.LinkedEntityId);
+        }
+        if (documentToProperty.isEmpty()) {
+            return heroes;
+        }
+
+        List<ContentVersion> shots = [
+            SELECT Id, ContentDocumentId
+            FROM ContentVersion
+            WHERE ContentDocumentId IN :documentToProperty.keySet()
+              AND IsLatest = true
+              AND Shareable_With_Visitors__c = true
+              AND Document_Type__c = 'Image / Gallery'
+            ORDER BY Title ASC
+            LIMIT 500
+        ];
+        if (shots.isEmpty()) {
+            return heroes;
+        }
+
+        Map<Id, String> urls = AgentforcePropertyDetailController.imageLinks(shots);
+        for (ContentVersion cv : shots) {
+            Id propertyId = documentToProperty.get(cv.ContentDocumentId);
+            String url = urls.get(cv.Id);
+            // First shot per property wins; the rest belong to the detail view.
+            if (propertyId != null && String.isNotBlank(url) && !heroes.containsKey(propertyId)) {
+                heroes.put(propertyId, url);
+            }
+        }
+        AgentforceLogger.log(LOG, 'IMAGES', 'hero photographs resolved=' + heroes.size() +
+            ' of ' + propertyIds.size() + ' property(s)');
+        return heroes;
+    }
+
+    /**
+     * The shortlist as one block of markdown, ready to send to the visitor
+     * verbatim - a photograph, the name, and the line that helps them choose.
+     *
+     * The messaging channel renders markdown but cannot host a custom Lightning
+     * component, so a picture only reaches the visitor as ![](url) inside the
+     * agent's own reply.
+     */
+    private static String buildListing(List<PropertyInfo> infos) {
+        if (infos.isEmpty()) {
+            return '';
+        }
+        Map<Id, String> heroes = heroImages(infos);
+
+        List<String> out = new List<String>();
+        for (PropertyInfo info : infos) {
+            String hero = String.isBlank(info.propertyId) ? null : heroes.get((Id) info.propertyId);
+            if (String.isNotBlank(hero)) {
+                out.add('![' + info.name + '](' + hero + ')');
+            }
+            out.add('**' + info.name + '**');
+
+            List<String> bits = new List<String>();
+            if (String.isNotBlank(info.city))           { bits.add(info.city); }
+            if (String.isNotBlank(info.configurations)) { bits.add(info.configurations.replace(';', ', ')); }
+            if (String.isNotBlank(info.priceRange))     { bits.add(info.priceRange); }
+            if (String.isNotBlank(info.status))         { bits.add(info.status); }
+            if (!bits.isEmpty()) {
+                out.add(String.join(bits, ' - '));
+            }
+            out.add('');
+        }
+        return String.join(out, '\n').trim();
+    }
+
     public static String blankToNull(String value) {
         return String.isBlank(value) ? null : value.trim();
     }
@@ -258,6 +354,9 @@ public with sharing class AgentforceController {
 
         @InvocableVariable(label='Relaxed Filters' description='Filters the visitor gave that had to be dropped. Blank on an exact match.')
         public String relaxedFilters;
+
+        @InvocableVariable(label='Listing' description='THE WHOLE ANSWER, already written as markdown with a photograph and one line per project. Send this to the visitor exactly as it is. Do not rewrite it, do not summarise it, and do not rebuild it from the Properties list.')
+        public String listing;
 
         @InvocableVariable(label='Properties')
         public List<PropertyInfo> properties;

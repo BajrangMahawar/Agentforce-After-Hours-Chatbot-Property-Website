@@ -1,0 +1,42 @@
+{
+  "required" : [ "propertyId", "startTimeText" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "durationMinutes" : {
+      "title" : "Duration (Minutes)",
+      "description" : "Slot length in minutes when no End Time (IST Text) is given. Leave blank to use the 60 minute default.",
+      "lightning:type" : "lightning__integerType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "endTimeText" : {
+      "title" : "End Time (IST Text)",
+      "description" : "Optional slot end as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock. Leave blank to use Duration (Minutes) instead.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "propertyId" : {
+      "title" : "Property Id",
+      "description" : "Id of the property the visitor confirmed, taken from the Get Properties result. Always pass this when it is known.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "propertyName" : {
+      "title" : "Property Name",
+      "description" : "Project name, used only when no Property Id is known. Partial names are matched.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "startTimeText" : {
+      "title" : "Start Time (IST Text)",
+      "description" : "Required. The requested start as plain text in India Standard Time, formatted yyyy-MM-dd HH:mm on a 24 hour clock, e.g. 2026-09-09 15:00 for 3 PM.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

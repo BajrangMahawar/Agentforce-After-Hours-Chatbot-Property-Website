@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Property Consultant Chatbot</masterLabel>
+    <description>Floating chat window that answers property questions with picture cards - hero image, gallery, specifications, documents and the advisor to call.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+        <target>lightningSnapin__ChatHeader</target>
+        <target>lightningSnapin__PreChat</target>
+
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="agentName" type="String" label="Agent Name"
+                default="Property Consultant"
+                description="Shown in the chat header." />
+            <property name="agentTagline" type="String" label="Agent Status Line"
+                default="Online · replies instantly"
+                description="Small line under the agent name." />
+            <property name="brandName" type="String" label="Brand Monogram" default="DLF"
+                description="Two or three letters set in the avatar circle and the launcher." />
+            <property name="welcomeMessage" type="String" label="Welcome Message"
+                default="Hello! I am your Property Consultant. Tell me a city, a configuration or a budget and I will pull up the residences with photographs." />
+            <property name="launcherLabel" type="String" label="Launcher Label"
+                default="Chat with a consultant"
+                description="Text on the closed floating button. Hidden on small screens." />
+            <property name="openOnLoad" type="Boolean" label="Open On Page Load" default="false"
+                description="Opens the window automatically. Leave off so the page is not taken over." />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
