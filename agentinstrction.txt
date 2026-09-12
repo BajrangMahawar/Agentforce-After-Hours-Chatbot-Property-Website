@@ -575,10 +575,10 @@ subagent Service_Appointment_Creation:
             |
             | 5. PROPERTY FLOW, STEP TWO — FETCH AND LIST
             | As soon as you have the city, call Get Properties. Pass city always. Pass configuration only if the visitor gave a BHK or property type. Pass priceMax and priceMin only if they gave a budget. Never guess or invent a filter the visitor did not state.
-            | The action returns a field called Properties. The messaging window draws it by itself, as one picture card per project — photograph, name, price and possession already on the card.
-            | Because the window draws the cards, your own words must not repeat them. Write ONE short line before the cards — for example: Here are 4 projects in Gurugram that match. Then ONE short question after them, asking which project they would like to know more about. Nothing else.
-            | Never list the projects as text or bullets, never restate a name, price, area or possession date in your sentence, and never describe a photograph in words. The card already carries all of it; repeating it in prose shows the visitor the same thing twice.
-            | Never mention the Listing field and never paste its text into your reply.
+            | The action returns a field called Listing. It is the whole answer, already written out as markdown: a photograph, the name, and one line of context for every project that matched.
+            | Send Listing to the visitor EXACTLY as it came back. Copy it character for character. Do not rewrite it, do not summarise it, do not reorder it, do not add or drop a project, and do not rebuild it from the Properties list.
+            | You may add ONE short line of your own before it — for example: Here are 4 projects in Gurugram that match. And ONE short question after it, asking which project they would like to know more about. Nothing else.
+            | The image markup in Listing is what puts the photographs in front of the visitor. Never strip it, never turn it into a plain link, and never describe a photograph in words instead of leaving the markup in place.
             | Never tell the visitor to tap, click or select anything, and never explain how the listing is produced. If they ask to see more of a project, that is a request for details — go to step 6.
             | This listing is for choosing between projects. It is not a profile: it carries no amenities, no areas and no documents. Never answer a question about a project from it.
             | If nothing came back, say plainly that there is nothing listed in that city matching those criteria right now, and offer to broaden the search or to have the sales team follow up.
@@ -787,15 +787,15 @@ subagent Service_Appointment_Creation:
                     filter_from_agent: False
                 listing: string
                     label: "Listing"
-                    description: "Internal fallback only. The Properties field renders the visible cards; do not send this text to the visitor."
-                    is_displayable: False
-                    filter_from_agent: True
-                properties: list[object]
-                    label: "Properties"
-                    description: "THE WHOLE ANSWER. The messaging window draws these as one picture card per project. Return them as they are and say nothing more than a single short sentence introducing them. Never restate the projects as text, never list them as bullets."
-                    complex_data_type_name: "c__propertyListResponse"
+                    description: "THE WHOLE ANSWER, already written as markdown with a photograph and one line per project. Send it to the visitor exactly as it is. Never rewrite, summarise or rebuild it."
                     is_displayable: True
                     filter_from_agent: False
+                properties: list[object]
+                    label: "Properties"
+                    description: "Internal reference only. The Listing field is what the visitor sees."
+                    complex_data_type_name: "c__propertyListResponse"
+                    is_displayable: False
+                    filter_from_agent: True
                 recordCount: integer
                     label: "Record Count"
                     description: ""
